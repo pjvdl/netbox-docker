@@ -280,6 +280,21 @@ if 'PAGINATE_COUNT' in environ:
 # # Plugins configuration settings. These settings are used by various plugins that the user may have installed.
 # # Each key in the dictionary is the name of an installed plugin and its value is a dictionary of settings.
 # PLUGINS_CONFIG = {
+#    'nextbox_ui_plugin': {
+#        'layers_sort_order': (
+#            ADD YOUR SETTINGS HERE
+#            layer_sort_order is a tuple
+#        ),
+#        'icon_model_map': {
+#            ADD YOUR SETTINGS HERE
+#            icon_model_map is a dict
+#        },
+#        'icon_role_map': {
+#            ADD YOUR SETTINGS HERE
+#            icon_role_map is a dict
+#        }
+#        'INITIAL_LAYOUT': 'auto' # or 'layered'
+#    }    
 # }
 
 # When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to

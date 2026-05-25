@@ -1,0 +1,22 @@
+FROM netboxcommunity/netbox:latest
+
+# Hub images ship local/release.yaml as `build: Docker-X.Y.Z`, which makes full_version
+# like 4.6.0-Docker-5.0.1 — invalid for packaging.version (plugin checks / manage.py).
+# Rewrite to a PEP 440 local version on the base NetBox release (same logic as Dockerfile).
+RUN /opt/netbox/venv/bin/python -c "import yaml; from pathlib import Path; root=Path('/opt/netbox/netbox'); nb=yaml.safe_load((root/'release.yaml').read_text()); dv=Path('/opt/netbox/VERSION').read_text().strip(); (root/'local'/'release.yaml').write_text(yaml.dump({'version': '{}+docker{}'.format(nb['version'], dv)}, default_flow_style=False, sort_keys=False))"
+
+COPY ./plugin_requirements.txt /opt/netbox/
+RUN /usr/local/bin/uv pip install -r /opt/netbox/plugin_requirements.txt
+
+# These lines are only required if your plugin has its own static files.
+COPY configuration/configuration.py /etc/netbox/config/configuration.py
+COPY configuration/plugins.py /etc/netbox/config/plugins.py
+
+RUN mkdir -p /opt/netbox/netbox/static/netbox_topology_views/img
+
+RUN DEBUG="true" SECRET_KEY="dummydummydummydummydummydummydummydummydummydummy" \
+    /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
+
+# NOTE: This SECRET_KEY is only used during the installation. There's no need to change it.
+# NOTE: If your plugins call for any static files, remember to add another COPY configuration/custom-plugins.py /etc/netbox/config/custom-plugins.py line to config.
+# NOTE: if your plugins call for any static folders, remember to add a RUN mkdir in here e.g. RUN mkdir -p /opt/netbox/netbox/static/netbox_topology_views/img - See your plugins Wiki for specific details

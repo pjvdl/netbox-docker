@@ -92,8 +92,7 @@ RUN useradd --home-dir /opt/netbox/ --no-create-home --no-user-group --system --
     && cd /opt/netbox/ && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/zensical build \
         --config-file /opt/netbox/mkdocs.yml \
     && DEBUG="true" SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input \
-    && echo "build: Docker-$(cat /opt/netbox/VERSION)" > /opt/netbox/netbox/local/release.yaml
-
+    && /opt/netbox/venv/bin/python -c "import yaml; from pathlib import Path; root=Path('/opt/netbox/netbox'); nb=yaml.safe_load((root/'release.yaml').read_text()); dv=Path('/opt/netbox/VERSION').read_text().strip(); (root/'local'/'release.yaml').write_text(yaml.dump({'version': '{}+docker{}'.format(nb['version'], dv)}, default_flow_style=False, sort_keys=False))"
 ENV LANG=C.utf8 PATH=/opt/netbox/venv/bin:$PATH VIRTUAL_ENV=/opt/netbox/venv UV_NO_CACHE=1
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 

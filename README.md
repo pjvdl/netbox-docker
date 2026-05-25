@@ -31,6 +31,11 @@ or start a new [GitHub Discussion][github-discussions].
 [netbox-docker-license]: https://github.com/netbox-community/netbox-docker/blob/release/LICENSE
 [github-discussions]: https://github.com/netbox-community/netbox-docker/discussions
 
+## With plugins
+
+https://netboxlabs.com/blog/netbox-plugins/
+https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
+
 ## Quickstart
 
 To get _NetBox Docker_ up and running run the following commands.
